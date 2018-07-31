@@ -39,7 +39,7 @@ class Usuario {
 		$this->dtcadastro = $value;
 	}
 
-
+	//RETORNA OS DADOS DO USUARIO PELO ID (INFORMADO NO INDEX)
 	public function loadById($id){
 
 		$sql = new Sql();
@@ -58,6 +58,47 @@ class Usuario {
 
 	}
 
+	//RETORNA UMA LISTA COM OS DADOS DE TODOS OS USUARIOS
+	public static function getList(){
+
+		$sql = new Sql();
+		return $sql->select("SELECT * FROM tb_usuarios ORDER BY deslogin;");
+
+	}
+
+	//Carrega uma lista de uma lista de usuarios buscando pelo login
+	public static function search($login){
+
+		$sql = new Sql();
+
+		return $sql->select("SELECT * FROM tb_usuarios WHERE deslogin LIKE :SEARCH ORDER BY deslogin", array(
+				':SEARCH'=>"%".$login."%"
+			));
+	}
+	//
+	public function login($login, $password) {
+
+		$sql = new Sql();
+
+		$results = $sql->select("SELECT * FROM tb_usuarios WHERE deslogin = :LOGIN AND dessenha = :PASSWORD", array(
+		":LOGIN"=>$login,
+		":PASSWORD"=>$password
+		));
+
+		if (count($results) > 0){
+
+			$row = $results[0];
+
+			$this->setIdusuario($row['idusuario']);
+			$this->setDeslogin($row['deslogin']);
+			$this->setDessenha($row['dessenha']);
+			$this->setDtcadastro(new DateTime($row['dtcadastro']));
+		} else {
+			throw new Exception("Login e/ou senha invalidos.");
+		}
+	}
+
+	//Visualizacao JSON
 	public function __toString(){
 	    if ($this->getIdusuario()) {
 	        return json_encode(array(
