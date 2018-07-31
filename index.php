@@ -28,5 +28,16 @@ $usuario = new Usuario();
 $usuario->login("vinicius","souza147");
 echo $usuario;
 
+echo "<br><br>";
+
+echo "<strong>Insert de novo usuario:</strong> <br>";
+$aluno = new Usuario();
+
+$aluno->setDeslogin("aluno");
+$aluno->setDessenha("@lun0");
+
+$aluno->insert();
+
+echo $aluno;
 
  ?>
